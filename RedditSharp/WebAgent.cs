@@ -1,3 +1,4 @@
+using Mono.Web;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
@@ -7,7 +8,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
-using System.Web;
 
 namespace RedditSharp
 {
@@ -269,7 +269,7 @@ namespace RedditSharp
             else
                 request = (HttpWebRequest)WebRequest.Create(url);
             request.CookieContainer = Cookies;
-            if (Type.GetType("Mono.Runtime") != null)
+            if (Type.GetType("Mono.Runtime") != null && Cookies != null)
             {
                 var cookieHeader = Cookies.GetCookieHeader(new Uri("http://reddit.com"));
                 request.Headers.Set("Cookie", cookieHeader);
