@@ -5,12 +5,15 @@ using System.Security.Authentication;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
+using Mono.Web;
 
 namespace RedditSharp.Things
 {
     public class Subreddit : Thing
     {
+
+        private const string RulesUrl = "/r/{0}/about/rules.json";
+        private const string RemovalReasonUrl = "/r/{0}/wiki/toolbox.json";
         private const string SubredditPostUrl = "/r/{0}.json";
         private const string SubredditNewUrl = "/r/{0}/new.json?sort=new";
         private const string SubredditHotUrl = "/r/{0}/hot.json";
@@ -333,9 +336,12 @@ namespace RedditSharp.Things
             return new Listing<Post>(Reddit, string.Format(SearchUrlDate, Name, from.ToUnixTimeSeconds(), to.ToUnixTimeSeconds(), sort), WebAgent);
         }
 
+       
+
         /// <summary>
         /// Settings of the subreddit, as best as possible
         /// </summary>
+        /// 
         public SubredditSettings Settings
         {
             get
@@ -361,6 +367,63 @@ namespace RedditSharp.Things
                 }
             }
         }
+
+        public List<SubredditRule> Rules
+        {
+            get
+            {
+                try
+                {
+                    var ret = new List<SubredditRule>();
+                    var request = WebAgent.CreateGet(string.Format(RulesUrl, Name));
+                    var response = request.GetResponse();
+                    var data = WebAgent.GetResponseString(response.GetResponseStream());
+                    var json = JObject.Parse(data);
+                    foreach (var rule in (JArray)json["rules"])
+                    {
+                        ret.Add(new SubredditRule((JObject)rule));
+                    }
+                    return ret;
+
+                }
+                catch // TODO: More specific catch
+                {
+                    return new List<SubredditRule>();
+                }
+            }
+        }
+        public List<PostRemovalReason> LinkRemovalReasons
+        {
+            get
+            {
+                try
+                {
+                    var ret = new List<PostRemovalReason>();
+                    var request = WebAgent.CreateGet(string.Format(RemovalReasonUrl, Name));
+                    var response = request.GetResponse();
+                    var data = WebAgent.GetResponseString(response.GetResponseStream());
+                    var json = JObject.Parse(data);
+                    json = JObject.Parse(json["data"]["content_md"].ToString());
+                    json = (JObject)json["removalReasons"];
+                    foreach (var reason in (JArray)json["reasons"])
+                    {
+                        var r = new PostRemovalReason((JObject)reason);
+                        r.Header = HttpUtility.UrlDecode(json["header"].ToString());
+                        r.Footer = HttpUtility.UrlDecode(json["footer"].ToString());
+                        ret.Add(r);
+                    }
+                    return ret;
+
+
+
+                }
+                catch
+                {
+                    return new List<PostRemovalReason>();
+                }
+            }
+        }
+
         /// <summary>
         /// Get an array of the available user flair templates for the subreddit
         /// </summary>
@@ -1231,7 +1294,7 @@ namespace RedditSharp.Things
         {
             return new Listing<ModAction>(Reddit, string.Format(ModLogUrl + "?type={1}", Name, ModActionTypeConverter.GetRedditParamName(action)), WebAgent);
         }
-
+        
         /// <summary>
         /// Gets the moderation log of the current subreddit filtered by moderator(s) who performed the action
         /// </summary>
