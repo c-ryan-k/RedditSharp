@@ -12,7 +12,7 @@ namespace RedditSharp
     {
         public PostRemovalReason(JObject json)
         {
-            ReasonText = HttpUtility.HtmlDecode(json["text"].ToString());
+            ReasonText = HttpUtility.UrlDecode(json["text"].ToString());
             Header = Header ?? "";
             Footer = Footer ?? "";
              FlairText = json["flairText"].ToString();

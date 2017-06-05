@@ -433,7 +433,7 @@ namespace RedditSharp.Things
             WebAgent.WritePostBody(stream, new
             {
                 how,
-                id = Id,
+                id = (this is Comment) ? this.FullName : Id,
                 uh = Reddit.User.Modhash
             });
             stream.Close();

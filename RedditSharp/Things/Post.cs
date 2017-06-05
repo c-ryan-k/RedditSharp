@@ -202,7 +202,8 @@ namespace RedditSharp.Things
                 text = message,
                 thing_id = FullName,
                 uh = Reddit.User.Modhash,
-                api_type = "json"
+                api_type = "json",
+
             });
             stream.Close();
             var response = request.GetResponse();

@@ -237,7 +237,7 @@ namespace RedditSharp.Things
                     linkId = this.LinkId.Substring(index + 1);
                 }
 
-                return string.Format("{0}://{1}/r/{2}/comments/{3}/_/{4}",
+                return string.Format("{0}://{1}/r/{2}/comments/{3}/{4}",
                                      RedditSharp.WebAgent.Protocol, RedditSharp.WebAgent.RootDomain,
                                      this.Subreddit, this.Parent != null ? this.Parent.Id : linkId, this.Id);
             }
