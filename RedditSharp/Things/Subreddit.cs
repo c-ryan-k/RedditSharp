@@ -13,7 +13,7 @@ namespace RedditSharp.Things
     {
 
         private const string RulesUrl = "/r/{0}/about/rules.json";
-        private const string RemovalReasonUrl = "/r/{0}/wiki/toolbox.json";
+        private const string ToolboxSettingsUrl = "/r/{0}/wiki/toolbox.json";
         private const string SubredditPostUrl = "/r/{0}.json";
         private const string SubredditNewUrl = "/r/{0}/new.json?sort=new";
         private const string SubredditHotUrl = "/r/{0}/hot.json";
@@ -392,37 +392,34 @@ namespace RedditSharp.Things
                 }
             }
         }
-        public List<PostRemovalReason> LinkRemovalReasons
+        public ToolboxSettings ModToolboxSettings
         {
+
             get
             {
                 try
                 {
                     var ret = new List<PostRemovalReason>();
-                    var request = WebAgent.CreateGet(string.Format(RemovalReasonUrl, Name));
+                    var request = WebAgent.CreateGet(string.Format(ToolboxSettingsUrl, Name));
                     var response = request.GetResponse();
                     var data = WebAgent.GetResponseString(response.GetResponseStream());
                     var json = JObject.Parse(data);
                     json = JObject.Parse(json["data"]["content_md"].ToString());
                     json = (JObject)json["removalReasons"];
-                    foreach (var reason in (JArray)json["reasons"])
-                    {
-                        var r = new PostRemovalReason((JObject)reason);
-                        r.Header = HttpUtility.UrlDecode(json["header"].ToString());
-                        r.Footer = HttpUtility.UrlDecode(json["footer"].ToString());
-                        ret.Add(r);
-                    }
-                    return ret;
-
+                    ToolboxSettings tbs = new ToolboxSettings(json);
+                    return tbs;
 
 
                 }
                 catch
                 {
-                    return new List<PostRemovalReason>();
+                    return new ToolboxSettings();
                 }
+
+
             }
         }
+       
 
         /// <summary>
         /// Get an array of the available user flair templates for the subreddit
