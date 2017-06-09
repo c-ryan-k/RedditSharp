@@ -109,7 +109,7 @@ namespace RedditSharp
 
         static WebAgent()
         {
-            UserAgent = "";
+            UserAgent = "rMod by ryan_k";
             RateLimit = RateLimitMode.Pace;
             Protocol = "https";
             RootDomain = "www.reddit.com";
