@@ -10,6 +10,14 @@ namespace RedditSharp
 {
     public class ToolboxSettings
     {
+        public ToolboxSettings()
+        {
+            Header = "";
+            Footer = "";
+            LogSub = "";
+            Reasons = new List<PostRemovalReason>();
+
+        }
         public ToolboxSettings(JObject json = null)
         {
             Header = HttpUtility.UrlDecode(json["header"].ToString());
