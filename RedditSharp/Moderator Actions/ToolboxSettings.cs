@@ -12,44 +12,44 @@ namespace RedditSharp
     {
         public ToolboxSettings()
         {
-            Header = "";
-            Footer = "";
-            LogSub = "";
-            Reasons = new List<PostRemovalReason>();
+            header = "";
+            footer = "";
+            logsub = "";
+            reasons = new List<PostRemovalReason>();
 
         }
         public ToolboxSettings(JObject json = null)
         {
-            Header = HttpUtility.UrlDecode(json["header"].ToString());
-            Footer = HttpUtility.UrlDecode(json["footer"].ToString());
-            LogSub = json["logsub"].ToString();
-            Reasons = new List<PostRemovalReason>();
+            header = HttpUtility.UrlDecode(json["header"].ToString());
+            footer = HttpUtility.UrlDecode(json["footer"].ToString());
+            logsub = json["logsub"].ToString();
+            reasons = new List<PostRemovalReason>();
             foreach (var reason in (JArray)json["reasons"])
             {
                 var r = new PostRemovalReason((JObject)reason);
 
-               Reasons.Add(r);
+               reasons.Add(r);
             }
             
         }
-        public List<PostRemovalReason> Reasons { get; set; }
-        public string LogSub { get; set; }
-        public string Header { get; set; }
-        public string Footer { get; set; }
+        public List<PostRemovalReason> reasons { get; set; }
+        public string logsub { get; set; }
+        public string header { get; set; }
+        public string footer { get; set; }
     }
     public class PostRemovalReason
     {
         public PostRemovalReason(JObject json = null)
         {
-            ReasonText = HttpUtility.UrlDecode(json["text"].ToString());
-            FlairText = json["flairText"].ToString();
-            FlairCSS = json["flairCSS"].ToString();
-            Title = json["title"].ToString();
+            text = HttpUtility.UrlDecode(json["text"].ToString());
+            flairText = json["flairText"].ToString();
+            flairCSS = json["flairCSS"].ToString();
+            title = json["title"].ToString();
         }
        
-        public string ReasonText { get; set; }
-        public string FlairText { get; set; }
-        public string FlairCSS { get; set; }
-        public string Title { get; set; }
+        public string text { get; set; }
+        public string flairText { get; set; }
+        public string flairCSS { get; set; }
+        public string title { get; set; }
     }
 }
