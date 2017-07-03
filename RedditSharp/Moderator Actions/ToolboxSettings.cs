@@ -41,10 +41,20 @@ namespace RedditSharp
     {
         public PostRemovalReason(JObject json = null)
         {
-            text = HttpUtility.UrlDecode(json["text"].ToString());
-            flairText = json["flairText"].ToString();
-            flairCSS = json["flairCSS"].ToString();
-            title = json["title"].ToString();
+            if (json == null)
+            {
+                text = "";
+                flairText = "";
+                flairCSS = "";
+                title = "";
+            }
+            else
+            {
+                text = HttpUtility.UrlDecode(json["text"].ToString());
+                flairText = json["flairText"].ToString();
+                flairCSS = json["flairCSS"].ToString();
+                title = json["title"].ToString();
+            }
         }
        
         public string text { get; set; }
