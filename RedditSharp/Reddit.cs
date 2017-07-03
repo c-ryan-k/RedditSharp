@@ -247,7 +247,10 @@ namespace RedditSharp
             var json = JObject.Parse(result);
             User = new AuthenticatedUser().Init(this, json, WebAgent);
         }
-
+        public Listing<ModAction> GetModerationLog()
+        {
+            return new Listing<ModAction>(this, @"/r/mod/about/log.json", WebAgent);
+        }
         #region Obsolete Getter Methods
 
         [Obsolete("Use User property instead")]
