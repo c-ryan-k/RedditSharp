@@ -401,7 +401,8 @@ namespace RedditSharp
                 var entry = Convert.ToString(additionalFields[i + 1]) ?? string.Empty;
                 value += additionalFields[i] + "=" + HttpUtility.UrlEncode(entry).Replace(";", "%3B").Replace("&", "%26") + "&";
             }
-            value = value.Remove(value.Length - 1); // Remove trailing &
+            if(value.Length > 0)
+                value = value.Remove(value.Length - 1); // Remove trailing &
             var raw = Encoding.UTF8.GetBytes(value);
             stream.Write(raw, 0, raw.Length);
             stream.Close();
